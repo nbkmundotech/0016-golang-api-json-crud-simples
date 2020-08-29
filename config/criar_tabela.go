@@ -4,13 +4,21 @@ import "database/sql"
 import _ "github.com/go-sql-driver/mysql"
 import "fmt"
 import "log"
+import "os"
 
 func main() {
   fmt.Println("-- Programa de Criar Tabela --")
 
   fmt.Println("Abrindo conexao...")
   // abrir a conexão
-  db, erroAbertura := sql.Open("mysql", "usuario:senha@tcp(localhost:3306)/bancodedados")
+  var stringDeConexao string = fmt.Sprintf(
+    "%s:%s@tcp(%s)/%s",
+    os.Getenv("DB_USUARIO"),
+    os.Getenv("DB_SENHA"),
+    os.Getenv("DB_HOST_COM_PORTA"),
+    os.Getenv("DB_BANCO_DE_DADOS"),
+  )
+  db, erroAbertura := sql.Open("mysql", stringDeConexao)
 
   if erroAbertura != nil {
     log.Fatal(erroAbertura.Error())
