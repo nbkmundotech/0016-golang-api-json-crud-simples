@@ -9,6 +9,7 @@ import (
   "io/ioutil"
   "log"
   "net/http"
+  "os"
   "strconv"
 )
 
@@ -232,7 +233,14 @@ func configurarServidor() {
 
 func configurarBancoDeDados() {
   var erroAbertura error
-  db, erroAbertura = sql.Open("mysql", "usuario:senha@tcp(localhost:3306)/bancodedados")
+  var stringDeConexao string = fmt.Sprintf(
+    "%s:%s@tcp(%s)/%s",
+    os.Getenv("DB_USUARIO"),
+    os.Getenv("DB_SENHA"),
+    os.Getenv("DB_HOST_COM_PORTA"),
+    os.Getenv("DB_BANCO_DE_DADOS"),
+  )
+  db, erroAbertura = sql.Open("mysql", stringDeConexao)
 
   if erroAbertura != nil {
     log.Fatal(erroAbertura.Error())
